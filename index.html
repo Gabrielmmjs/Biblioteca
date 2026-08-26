@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca VirtualIF — Biblioteca Digital Futurista</title>
+    <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Fundo Atmosférico com Estantes e Orbes Futuristas -->
+    <div class="bg-atmosphere" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="bg-book-shape book-shape-1"></div>
+        <div class="bg-book-shape book-shape-2"></div>
+        <div class="bg-grid-overlay"></div>
+    </div>
+
+    <!-- Cabeçalho Glassmorphism -->
+    <header class="app-header glass-panel">
+        <div class="header-content">
+            <div class="brand" id="brandLogo">
+                <span class="brand-icon">📚</span>
+                <div class="brand-text-group">
+                    <span class="brand-title">Biblioteca VirtualIF</span>
+                    <span class="brand-tagline">Acervo Digital Futurista</span>
+                </div>
+            </div>
+
+            <!-- Menu de Navegação -->
+            <nav class="main-nav">
+                <a href="#inicio" class="nav-link active" id="navInicio">Início</a>
+                <a href="#biblioteca" class="nav-link" id="navBiblioteca">Biblioteca</a>
+                <a href="#categorias" class="nav-link" id="navCategorias">Categorias</a>
+                <a href="#favoritos" class="nav-link" id="navFavoritos">Favoritos <span id="favCounterBadge" class="nav-badge">0</span></a>
+            </nav>
+
+            <!-- Ações do Cabeçalho -->
+            <div class="header-actions">
+                <button id="btConfigKey" class="glass-btn icon-btn" title="Configurar Chave da API Google Books">
+                    <span class="btn-icon">⚙️</span>
+                    <span class="btn-text">Chave API</span>
+                    <span id="keyStatusBadge" class="status-dot inactive" title="Usando modo público sem chave"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        
+        <!-- Seção Hero Principal -->
+        <section id="inicio" class="hero-section">
+            <div class="hero-content">
+                <span class="hero-badge glass-panel">✨ Biblioteca Digital Futurista</span>
+                <h1 class="hero-title">Seu conhecimento começa com um livro.</h1>
+                <p class="hero-subtitle">
+                    Explore, pesquise e descubra milhares de obras e acervos literários instantaneamente com velocidade de cache local e interface intuitiva.
+                </p>
+
+                <!-- Barra de Pesquisa Hero -->
+                <form id="searchForm" class="hero-search-box glass-card" onsubmit="event.preventDefault();">
+                    <div class="search-input-group">
+                        <span class="search-icon">🔍</span>
+                        <input
+                            type="text"
+                            id="livro"
+                            placeholder="Pesquise por título, autor ou assunto..."
+                            autocomplete="off">
+                        <button type="submit" id="btBuscar" class="glass-btn primary-btn search-btn">
+                            <span>Buscar Livro</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Status de Cache em Memória -->
+                <div id="cacheBar" class="cache-bar hidden">
+                    <span id="cacheInfoText" class="cache-text">⚡ Cache Local: 0 termo(s) armazenado(s)</span>
+                    <button id="btLimparCache" class="text-link-btn" title="Limpar memória RAM do navegador">Limpar Cache</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Animação de Progresso e Carregamento -->
+        <div id="progressContainer" class="progress-container glass-card hidden" aria-live="polite">
+            <div class="progress-info">
+                <span id="progressStatusText" class="progress-status">Conectando ao acervo da Google Books API...</span>
+                <span id="progressPercentage" class="progress-percentage">0%</span>
+            </div>
+            <div class="progress-track">
+                <div id="progressBarFill" class="progress-fill"></div>
+            </div>
+            <div class="loading-spinner-wrapper">
+                <div class="glass-spinner"></div>
+                <span class="spinner-text">Consultando catálogo digital nas nuvens...</span>
+            </div>
+        </div>
+
+        <!-- Box de Tratamento de Erros -->
+        <div id="errorBox" class="error-box glass-panel hidden" role="alert">
+            <div class="error-icon">⚠️</div>
+            <div class="error-content">
+                <h4 id="errorTitle">Erro na Requisição</h4>
+                <p id="errorMessage">Não foi possível processar a busca no momento.</p>
+            </div>
+            <button id="btFecharErro" class="close-err-btn" title="Fechar erro">✕</button>
+        </div>
+
+        <!-- Seção de Categorias -->
+        <section id="categorias" class="categories-section">
+            <div class="section-header">
+                <h2>Explore por Categorias</h2>
+                <p>Navegue pelos gêneros mais populares da biblioteca</p>
+            </div>
+            <div class="categories-grid">
+                <button class="category-card glass-card" data-category="Ficção">
+                    <span class="cat-icon">📖</span>
+                    <span class="cat-title">Ficção</span>
+                </button>
+                <button class="category-card glass-card" data-category="Fantasia">
+                    <span class="cat-icon">🧙‍♂️</span>
+                    <span class="cat-title">Fantasia</span>
+                </button>
+                <button class="category-card glass-card" data-category="Romance">
+                    <span class="cat-icon">💖</span>
+                    <span class="cat-title">Romance</span>
+                </button>
+                <button class="category-card glass-card" data-category="Terror">
+                    <span class="cat-icon">👻</span>
+                    <span class="cat-title">Terror</span>
+                </button>
+                <button class="category-card glass-card" data-category="Ciência">
+                    <span class="cat-icon">🔬</span>
+                    <span class="cat-title">Ciência</span>
+                </button>
+                <button class="category-card glass-card" data-category="História">
+                    <span class="cat-icon">📜</span>
+                    <span class="cat-title">História</span>
+                </button>
+                <button class="category-card glass-card" data-category="Tecnologia">
+                    <span class="cat-icon">💻</span>
+                    <span class="cat-title">Tecnologia</span>
+                </button>
+                <button class="category-card glass-card" data-category="Literatura">
+                    <span class="cat-icon">✒️</span>
+                    <span class="cat-title">Literatura</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Seção Principal de Livros (Grid de Cards) -->
+        <section id="biblioteca" class="books-section">
+            <div class="section-header-bar">
+                <div>
+                    <h2 id="sectionTitle">📚 Destaques do Acervo</h2>
+                    <p id="sectionSubtitle" class="section-subtitle">Livros recomendados para explorar agora</p>
+                </div>
+                <div id="resultsCacheBadge" class="hidden">
+                    <span class="badge-cache">⚡ Do Cache Local</span>
+                </div>
+            </div>
+
+            <!-- Grade de Cards de Livros Glassmorphism -->
+            <div id="booksGrid" class="books-grid">
+                <!-- Cards inseridos dinamicamente pelo script.js -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal de Detalhes do Livro -->
+    <dialog id="bookDetailModal" class="glass-modal detail-modal">
+        <div class="modal-content glass-panel modal-large">
+            <button id="btFecharDetailModal" class="close-modal-btn" aria-label="Fechar detalhes">✕</button>
+            <div id="detailModalBody" class="detail-modal-body">
+                <!-- Conteúdo do Livro renderizado dinamicamente -->
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Modal de Configuração da Chave de API -->
+    <dialog id="apiModal" class="glass-modal">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h3>⚙️ Chave da API Google Books</h3>
+                <button id="btFecharModal" class="close-modal-btn" aria-label="Fechar modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <p>Insira sua própria API Key do Google Books para ampliar o limite de cota de requisições:</p>
+                <div class="input-group">
+                    <label for="apiKeyInput">Chave da API (API Key)</label>
+                    <input type="password" id="apiKeyInput" placeholder="Ex: AIzaSyA9spDn..." autocomplete="off">
+                    <button type="button" id="btToggleKeyVisibility" class="toggle-visibility-btn" title="Mostrar/Ocultar chave">👁️</button>
+                </div>
+                <div class="modal-info-note">
+                    <span>💡 <strong>Segurança:</strong> Sua chave fica armazenada apenas localmente no seu navegador e não é exposta publicamente.</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btRemoverChave" class="glass-btn danger-btn hidden">Remover Chave</button>
+                <button id="btSalvarChave" class="glass-btn primary-btn">Salvar Chave</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Rodapé -->
+    <footer class="app-footer glass-panel">
+        <p>Biblioteca VirtualIF &bull; DESENVOLVIDO POR GABRIEL</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
